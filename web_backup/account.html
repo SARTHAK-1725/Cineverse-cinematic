@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0B0714">
+  <title>Sign in | CineVerse</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="data.js" defer></script>
+  <script src="app.js?v=cineverse1" defer></script>
+</head>
+<body data-page="account">
+  <header class="topbar" id="app-header"></header>
+  <main>
+    <p class="demo-banner">Login and registration are local UI only. Profiles are stored in this browser and are not sent to a server.</p>
+    <section class="history-page-heading">
+      <p class="eyebrow">ACCOUNT</p>
+      <h1>A name for the <em>ticket.</em></h1>
+    </section>
+    <div id="session-box" class="panel" hidden>
+      <p></p>
+      <button id="sign-out" type="button">Sign out</button>
+    </div>
+    <div class="lounge-grid">
+      <article class="panel">
+        <h2>Register</h2>
+        <form id="register-form" class="stack-form">
+          <label>Name <input id="register-name" required autocomplete="name"></label>
+          <label>Email <input id="register-email" type="email" required autocomplete="email"></label>
+          <label>Password <input id="register-password" type="password" required minlength="6" autocomplete="new-password"></label>
+          <button type="submit">Create demo profile</button>
+        </form>
+      </article>
+      <article class="panel">
+        <h2>Sign in</h2>
+        <form id="login-form" class="stack-form">
+          <label>Email <input id="login-email" type="email" required autocomplete="email"></label>
+          <label>Password <input id="login-password" type="password" required autocomplete="current-password"></label>
+          <button type="submit">Sign in on this device</button>
+        </form>
+      </article>
+    </div>
+    <p id="account-status" class="status-message" role="status"></p>
+  </main>
+  <footer id="app-footer"></footer>
+</body>
+</html>

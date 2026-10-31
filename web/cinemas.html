@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07070A">
+  <title>Cinemas | CineVerse Jaipur</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="data.js" defer></script>
+  <script src="app.js?v=cineverse1" defer></script>
+</head>
+<body data-page="cinemas">
+  <header class="topbar" id="app-header"></header>
+  <main>
+    <section class="history-page-heading">
+      <p class="eyebrow">LOCATOR</p>
+      <h1>Five halls across <em>Jaipur.</em></h1>
+      <p class="intro-note">Addresses are for navigation demos. Navigate opens Google Maps in a new tab.</p>
+    </section>
+    <div class="catalogue-tools">
+      <label class="field-visible" for="cinema-search">Search
+        <input id="cinema-search" type="search" placeholder="Area or cinema">
+      </label>
+      <label class="field-visible" for="cinema-format">Format
+        <select id="cinema-format">
+          <option value="all">All formats</option>
+          <option>2D</option>
+          <option>3D</option>
+          <option>4DX</option>
+          <option>IMAX</option>
+        </select>
+      </label>
+    </div>
+    <div id="cinema-list" class="cinema-list"></div>
+  </main>
+  <footer id="app-footer"></footer>
+</body>
+</html>

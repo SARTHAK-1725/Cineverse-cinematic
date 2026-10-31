@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07070A">
+  <meta name="description" content="CineVerse Jaipur — Cinematic movie-booking simulator with luxury dark aesthetic inspired by Cine Sync.">
+  <title>CineVerse | Luxury Cinema & Ticket Booking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="data.js" defer></script>
+  <script src="app.js?v=cineverse1" defer></script>
+</head>
+<body data-page="home">
+  <header class="topbar" id="app-header"></header>
+
+  <main>
+    <p class="demo-banner">Demonstration site. Bookings, wallet credits and suggestions stay on this device. Payments are not processed.</p>
+    <section class="feature-hero" id="feature-hero" aria-label="Featured film">
+      <div class="feature-copy">
+        <div class="feature-kicker"><span class="eyebrow">FEATURED IN JAIPUR</span><span class="feature-counter" id="featured-counter">01 / 08</span></div>
+        <h1 id="featured-title">The Last Light</h1>
+        <p id="featured-meta" class="feature-meta">Adventure · 2h 08m · PG-13</p>
+        <p id="featured-description" class="feature-description">One quiet journey becomes a reason to begin again.</p>
+        <div class="feature-actions">
+          <button id="feature-book" class="feature-book" type="button">Book seats <svg aria-hidden="true" viewBox="0 0 16 16"><path d="M3 8h10M8 3l5 5-5 5"/></svg></button>
+          <button id="feature-trailer" class="ghost-button" type="button"><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" style="margin-right:2px"><polygon points="5,3 13,8 5,13" fill="currentColor"/></svg> Watch trailer</button>
+          <div class="carousel-controls" aria-label="Featured films">
+            <button id="featured-prev" class="carousel-arrow" type="button" aria-label="Previous featured film"><svg aria-hidden="true" viewBox="0 0 16 16"><path d="M13 8H3m5 5L3 8l5-5"/></svg></button>
+            <button id="featured-next" class="carousel-arrow" type="button" aria-label="Next featured film"><svg aria-hidden="true" viewBox="0 0 16 16"><path d="M3 8h10M8 3l5 5-5 5"/></svg></button>
+          </div>
+        </div>
+      </div>
+      <div class="feature-art-block">
+        <div id="featured-poster" class="featured-poster" data-tone="teal" aria-label="Featured movie poster">
+          <span class="featured-poster-kicker">CINEVERSE / FEATURE</span>
+          <span id="featured-poster-letter" class="featured-poster-letter">T</span>
+          <span id="featured-poster-index" class="featured-poster-index">2D</span>
+          <span class="featured-art-sun" aria-hidden="true"></span>
+          <span class="featured-art-line" aria-hidden="true"></span>
+        </div>
+      </div>
+    </section>
+
+    <section id="now-showing" class="now-showing" aria-labelledby="movie-heading">
+      <div class="section-heading">
+        <div><p class="eyebrow">NOW SHOWING</p><h2 id="movie-heading">Pick your film</h2></div>
+        <span class="section-note" id="movie-count">8 FILMS</span>
+      </div>
+      <div class="catalogue-tools">
+        <label class="field-visible" for="movie-search">Search films
+          <input id="movie-search" type="search" placeholder="Title, genre or mood">
+        </label>
+        <label class="field-visible" for="genre-filter">Genre
+          <select id="genre-filter">
+            <option value="all">All genres</option>
+            <option>Adventure</option>
+            <option>Romance</option>
+            <option>Mystery</option>
+            <option>Science fiction</option>
+            <option>Drama</option>
+            <option>Family</option>
+            <option>Action</option>
+            <option>Comedy</option>
+          </select>
+        </label>
+      </div>
+      <div id="movie-grid" class="movie-grid" aria-live="polite"></div>
+      <div class="movie-details" aria-live="polite">
+        <div class="movie-poster" id="movie-poster" aria-hidden="true"><span class="poster-kicker"></span><span class="poster-letter"></span><span class="poster-index"></span></div>
+        <div class="movie-copy">
+          <p class="movie-meta" id="movie-meta"></p>
+          <p class="movie-description" id="movie-description"></p>
+          <div id="movie-cast" class="movie-cast-row" aria-label="Top cast"></div>
+          <p class="movie-price" id="movie-price"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="seat-section" aria-labelledby="seat-title">
+      <div class="section-heading">
+        <div><p class="eyebrow">THE AUDITORIUM</p><h2 id="seat-title">Cinema, format, showtime, seats</h2></div>
+        <span class="section-note" id="seat-count">40 SEATS</span>
+      </div>
+      <div class="booking-options">
+        <div><p class="eyebrow">CINEMA</p><div id="cinema-options" class="chip-row"></div></div>
+        <div><p class="eyebrow">FORMAT</p><div id="format-options" class="chip-row"></div></div>
+        <div><p class="eyebrow">SHOWTIME</p><div id="showtime-options" class="chip-row" role="group" aria-label="Choose a showtime"></div></div>
+      </div>
+      <div class="screen-wrap"><div class="screen-glow"></div><div class="screen-label">SCREEN</div></div>
+      <div id="seat-grid" class="seat-grid" role="group" aria-label="Select cinema seats"></div>
+      <div class="seat-legend" aria-label="Seat status">
+        <span><i class="legend-seat available"></i> Available</span>
+        <span><i class="legend-seat selected"></i> Selected</span>
+        <span><i class="legend-seat booked"></i> Booked</span>
+        <span><i class="legend-seat recliner"></i> Recliner +₹180</span>
+      </div>
+    </section>
+  </main>
+
+  <aside class="booking-panel" aria-labelledby="booking-title">
+    <div class="booking-top"><p class="eyebrow">YOUR SELECTION</p><span>№ <b id="ticket-number">001</b></span></div>
+    <h2 id="booking-title">Booking summary</h2>
+    <div class="booking-summary">
+      <div><span>Movie</span><strong id="summary-movie">Select a movie</strong></div>
+      <div><span>Show</span><strong id="summary-show">Choose a cinema</strong></div>
+      <div><span>Seats</span><strong id="summary-seats">None selected</strong></div>
+      <div class="total-row"><span>Total</span><strong id="summary-total">₹0</strong></div>
+    </div>
+    <label class="field-label" for="customer-name">Your name</label>
+    <input id="customer-name" name="customerName" type="text" maxlength="60" autocomplete="name" placeholder="Name on the booking" required>
+    <label class="field-label" for="offer-select">Offer code</label>
+    <select id="offer-select"><option value="">No offer</option></select>
+    <button id="book-button" type="button" disabled><span>Confirm booking</span><svg aria-hidden="true" viewBox="0 0 16 16"><path d="M3 8h10M8 3l5 5-5 5"/></svg></button>
+    <p id="status-message" class="status-message" role="status" aria-live="polite"></p>
+    <p class="privacy-note" id="offer-note">Demo booking · Saved on this device</p>
+  </aside>
+
+  <dialog id="booking-confirmation" class="booking-dialog confirmation-dialog" aria-labelledby="confirmation-title">
+    <div class="dialog-header">
+      <div><p class="eyebrow">CINEVERSE DEMO</p><h2 id="confirmation-title">Your ticket is held</h2></div>
+      <button id="close-confirmation" class="dialog-close" type="button" aria-label="Close confirmation"><svg aria-hidden="true" viewBox="0 0 16 16"><path d="m4 4 8 8m0-8-8 8"/></svg></button>
+    </div>
+    <div class="ticket-confirmation">
+      <div class="confirmation-main">
+        <span class="confirmation-label">BOOKING ID · NOT A PAID TICKET</span><strong id="confirmation-id"></strong>
+        <span class="confirmation-movie" id="confirmation-movie"></span>
+        <span id="confirmation-seats" class="confirmation-seats"></span>
+      </div>
+      <div class="ticket-perforation" aria-hidden="true"></div>
+      <svg class="ticket-barcode" aria-hidden="true" viewBox="0 0 160 32" preserveAspectRatio="none"><path d="M2 0v32M7 0v32M14 0v32M18 0v32M26 0v32M30 0v32M35 0v32M43 0v32M48 0v32M55 0v32M59 0v32M65 0v32M72 0v32M77 0v32M81 0v32M89 0v32M96 0v32M100 0v32M108 0v32M115 0v32M119 0v32M125 0v32M132 0v32M138 0v32M143 0v32M151 0v32M157 0v32"/></svg>
+    </div>
+  </dialog>
+
+  <dialog id="trailer-dialog" class="booking-dialog trailer-modal" aria-labelledby="trailer-title">
+    <div class="dialog-header">
+      <div><p class="eyebrow">OFFICIAL TRAILER</p><h2 id="trailer-title">Film</h2></div>
+      <button id="close-trailer" class="dialog-close" type="button" aria-label="Close trailer"><svg aria-hidden="true" viewBox="0 0 16 16"><path d="m4 4 8 8m0-8-8 8"/></svg></button>
+    </div>
+    <div id="trailer-stage" class="trailer-stage" data-tone="teal"></div>
+    <p id="trailer-copy">Streamed via YouTube.</p>
+  </dialog>
+
+  <footer id="app-footer"></footer>
+</body>
+</html>

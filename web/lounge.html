@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07070A">
+  <title>Lounge & AI Movie Finder | CineVerse</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="data.js" defer></script>
+  <script src="app.js?v=cineverse1" defer></script>
+</head>
+<body data-page="lounge">
+  <header class="topbar" id="app-header"></header>
+  <main>
+    <p class="demo-banner">Suggestions use a local scoring rule. Group, private-screen and planner forms save on this device only.</p>
+    <section class="history-page-heading">
+      <p class="eyebrow">LOUNGE</p>
+      <h1>Nights, <em>arranged.</em></h1>
+      <p class="intro-note">Mood picks, group holds, private-screen requests and a meal-plus-cab planner.</p>
+    </section>
+    <section class="lounge-grid">
+      <article class="panel" id="mood-picks">
+        <p class="eyebrow">AI MOVIE FINDER · MOOD PICKS</p>
+        <h2>What should we watch?</h2>
+        <form id="suggest-form" class="stack-form">
+          <label>Mood
+            <select id="mood">
+              <option value="cozy">Cozy</option>
+              <option value="epic">Epic</option>
+              <option value="tense">Tense</option>
+              <option value="hopeful">Hopeful</option>
+              <option value="thoughtful">Thoughtful</option>
+            </select>
+          </label>
+          <label>Occasion
+            <select id="occasion">
+              <option value="date">Date night</option>
+              <option value="friends">Friends</option>
+              <option value="family">Family</option>
+              <option value="solo">Solo</option>
+              <option value="celebration">Celebration</option>
+            </select>
+          </label>
+          <label>Budget per ticket
+            <select id="budget">
+              <option value="280">Under ₹280</option>
+              <option value="320">Under ₹320</option>
+              <option value="400">Under ₹400</option>
+              <option value="800">Any format</option>
+            </select>
+          </label>
+          <button type="submit">Suggest films</button>
+        </form>
+        <div id="suggest-results" class="suggest-results"></div>
+      </article>
+      <article class="panel" id="group-booking">
+        <p class="eyebrow">GROUP BOOKING</p>
+        <h2>Hold a row for friends</h2>
+        <form id="group-form" class="stack-form">
+          <label>Film <select id="group-movie"></select></label>
+          <label>People <input id="group-size" type="number" min="4" max="40" value="8" required></label>
+          <label>Note <input id="group-note" type="text" placeholder="Birthday, aisle seats"></label>
+          <button type="submit">Save group request</button>
+        </form>
+        <p id="group-status" class="status-message" role="status"></p>
+      </article>
+      <article class="panel" id="private-screen">
+        <p class="eyebrow">PRIVATE SCREEN</p>
+        <h2>Request a hall</h2>
+        <form id="private-form" class="stack-form">
+          <label>Film <select id="private-movie"></select></label>
+          <label>Preferred date <input id="private-date" type="date" required></label>
+          <label>Note <input id="private-note" type="text" placeholder="Company screening"></label>
+          <button type="submit">Save private request</button>
+        </form>
+        <p id="private-status" class="status-message" role="status"></p>
+      </article>
+      <article class="panel" id="outing-planner">
+        <p class="eyebrow">OUTING PLANNER</p>
+        <h2>Tickets, meals, transport</h2>
+        <form id="planner-form" class="stack-form">
+          <label>Film <select id="plan-movie"></select></label>
+          <label>Tickets <input id="plan-tickets" type="number" min="1" max="12" value="2" required></label>
+          <label>Meal
+            <select id="plan-meal">
+              <option value="classic">Classic combo · ₹280</option>
+              <option value="recliner">Recliner tray · ₹520</option>
+              <option value="skip">No meal</option>
+            </select>
+          </label>
+          <label>Transport
+            <select id="plan-transport">
+              <option value="cab">Cab both ways · ₹420</option>
+              <option value="metro">Metro + auto · ₹120</option>
+              <option value="own">Own vehicle · ₹80</option>
+            </select>
+          </label>
+          <button type="submit">Estimate night out</button>
+        </form>
+        <p id="planner-status" class="status-message" role="status"></p>
+      </article>
+    </section>
+  </main>
+  <footer id="app-footer"></footer>
+</body>
+</html>

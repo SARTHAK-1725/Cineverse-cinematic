@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07070A">
+  <title>Concierge & Support | CineVerse</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="data.js" defer></script>
+  <script src="app.js?v=cineverse1" defer></script>
+</head>
+<body data-page="support">
+  <header class="topbar" id="app-header"></header>
+  <main>
+    <section class="history-page-heading">
+      <p class="eyebrow">HELP</p>
+      <h1>Clear rules, <em>plain language.</em></h1>
+    </section>
+    <section class="lounge-grid">
+      <article class="panel">
+        <p class="eyebrow">CANCELLATION POLICY</p>
+        <h2>Demo refunds</h2>
+        <table class="policy-table">
+          <thead><tr><th>When you cancel</th><th>Wallet credit</th></tr></thead>
+          <tbody>
+            <tr><td>More than 24 hours before showtime</td><td>90% of the demo ticket total</td></tr>
+            <tr><td>4 to 24 hours before showtime</td><td>50% of the demo ticket total</td></tr>
+            <tr><td>Inside 4 hours</td><td>No refund</td></tr>
+          </tbody>
+        </table>
+        <p class="muted">Credits appear in the rewards wallet. No bank or card is involved.</p>
+      </article>
+      <article class="panel">
+        <p class="eyebrow">FAQ</p>
+        <div id="faq-list"></div>
+      </article>
+      <article class="panel">
+        <p class="eyebrow">CUSTOMER SUPPORT</p>
+        <h2>Write to the desk</h2>
+        <form id="support-form" class="stack-form">
+          <label>Name <input required></label>
+          <label>Email <input type="email" required></label>
+          <label>Message <textarea required rows="4"></textarea></label>
+          <button type="submit">Send demo message</button>
+        </form>
+        <p id="support-status" class="status-message" role="status"></p>
+      </article>
+    </section>
+  </main>
+  <footer id="app-footer"></footer>
+</body>
+</html>
