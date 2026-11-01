@@ -362,6 +362,67 @@ function makePoster(movie, index, className) {
   return poster;
 }
 
+function toYouTubeEmbedUrl(videoUrl) {
+  if (!videoUrl) return "";
+  const value = videoUrl.trim();
+  if (!value) return "";
+
+  const embedMatch = value.match(/youtube(?:-nocookie)?\.com\/embed\/([A-Za-z0-9_-]{11})/i);
+  if (embedMatch) return `https://www.youtube-nocookie.com/embed/${embedMatch[1]}?rel=0&modestbranding=1`;
+
+  const watchMatch = value.match(/(?:youtube\.com\/watch\?[^\s]*v=|youtube\.com\/shorts\/|youtu\.be\/)([A-Za-z0-9_-]{11})/i);
+  if (watchMatch) return `https://www.youtube-nocookie.com/embed/${watchMatch[1]}?rel=0&modestbranding=1`;
+
+  return "";
+}
+
+async function openTrailerDialog(movie) {
+  const dialog = document.querySelector("#trailer-dialog");
+  const title = document.querySelector("#trailer-title");
+  const copy = document.querySelector("#trailer-copy");
+  const stage = document.querySelector("#trailer-stage");
+
+  if (!dialog || !title || !copy || !stage || !movie) return;
+
+  title.textContent = movie.title;
+  stage.dataset.tone = movie.tone || "teal";
+  stage.replaceChildren();
+  stage.classList.remove("has-video");
+
+  let embedUrl = toYouTubeEmbedUrl(movie.trailerUrl);
+  let trailerCopy = "Official trailer unavailable for this movie right now.";
+
+  if (!embedUrl && movie.tmdbId) {
+    const data = await fetchTMDBMedia(movie.tmdbId);
+    const trailer = data?.trailer;
+    if (trailer?.embedUrl) {
+      embedUrl = trailer.embedUrl;
+    } else if (trailer?.key) {
+      embedUrl = `https://www.youtube-nocookie.com/embed/${trailer.key}?rel=0&modestbranding=1`;
+    }
+  }
+
+  if (embedUrl) {
+    stage.classList.add("has-video");
+    const iframe = document.createElement("iframe");
+    iframe.className = "trailer-iframe";
+    iframe.src = embedUrl;
+    iframe.title = `${movie.title} trailer`;
+    iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+    iframe.allowFullscreen = true;
+    stage.appendChild(iframe);
+    trailerCopy = `${movie.title} · Official trailer`;
+  } else {
+    const emptyState = document.createElement("div");
+    emptyState.className = "trailer-empty-state";
+    emptyState.innerHTML = `<strong>${movie.title}</strong><p>Trailer not available right now. This demo keeps the experience working without a broken video.</p>`;
+    stage.appendChild(emptyState);
+  }
+
+  copy.textContent = trailerCopy;
+  dialog.showModal();
+}
+
 function renderFeaturedFilm() {
   const movie = MOVIES[featuredMovieIndex];
   const title = document.querySelector("#featured-title");
@@ -431,13 +492,13 @@ function renderMovies() {
     syncFormatToMovie();
   }
   list.forEach((movie, index) => {
-    const card = document.createElement("button");
-    card.type = "button";
+    const card = document.createElement("article");
     card.className = "movie-card";
     card.dataset.movieId = movie.id;
     card.setAttribute("aria-pressed", String(movie.id === selectedMovieId));
-    card.append(makePoster(movie, MOVIES.indexOf(movie), "movie-card-poster"));
-    const info = document.createElement("span");
+
+    const poster = makePoster(movie, MOVIES.indexOf(movie), "movie-card-poster");
+    const info = document.createElement("div");
     info.className = "movie-card-info";
     const title = document.createElement("strong");
     title.className = "movie-card-title";
@@ -448,16 +509,33 @@ function renderMovies() {
     const price = document.createElement("span");
     price.className = "movie-card-price";
     price.textContent = `from ${formatPrice(movie.price)}`;
-    const action = document.createElement("span");
-    action.className = "movie-card-action";
-    action.innerHTML = movie.id === selectedMovieId
+    info.append(title, meta, price);
+
+    const actions = document.createElement("div");
+    actions.className = "movie-card-actions";
+
+    const selectButton = document.createElement("button");
+    selectButton.type = "button";
+    selectButton.className = "movie-card-select";
+    selectButton.innerHTML = movie.id === selectedMovieId
       ? `<span>Selected</span> <svg aria-hidden="true" viewBox="0 0 16 16"><path d="M3 8.5l3.5 3.5 6.5-7"/></svg>`
       : `<span>Select</span> <svg aria-hidden="true" viewBox="0 0 16 16"><path d="M6 3l5 5-5 5"/></svg>`;
-    info.append(title, meta, price);
-    card.append(info, action);
-    card.addEventListener("click", () => {
+    selectButton.addEventListener("click", event => {
+      event.stopPropagation();
       selectMovie(movie.id, true);
     });
+
+    const trailerButton = document.createElement("button");
+    trailerButton.type = "button";
+    trailerButton.className = "movie-card-trailer";
+    trailerButton.innerHTML = '<svg aria-hidden="true" viewBox="0 0 16 16"><polygon points="5,3 13,8 5,13" fill="currentColor"/></svg><span>Watch trailer</span>';
+    trailerButton.addEventListener("click", event => {
+      event.stopPropagation();
+      openTrailerDialog(movie);
+    });
+
+    actions.append(selectButton, trailerButton);
+    card.append(poster, info, actions);
     movieGrid.append(card);
   });
 }
@@ -478,6 +556,17 @@ function renderMovieDetails() {
   movieMeta.innerHTML = `<span class="meta-genre">${movie.genre}</span> · <span>${movie.duration}</span> · <span class="meta-cert">${movie.rating}</span> · <span class="meta-score">★ ${movie.score.toFixed(1)}</span>`;
   movieDescription.textContent = movie.description;
   moviePrice.textContent = `${formatPrice(formatBasePrice(movie, selectedFormat))} ${selectedFormat} base`;
+
+  const movieActions = document.querySelector("#movie-actions");
+  if (movieActions) {
+    movieActions.replaceChildren();
+    const trailerButton = document.createElement("button");
+    trailerButton.type = "button";
+    trailerButton.className = "watch-trailer-button";
+    trailerButton.innerHTML = '<svg aria-hidden="true" viewBox="0 0 16 16"><polygon points="5,3 13,8 5,13" fill="currentColor"/></svg><span>Watch trailer</span>';
+    trailerButton.addEventListener("click", () => openTrailerDialog(movie));
+    movieActions.append(trailerButton);
+  }
 
   const castRow = document.querySelector("#movie-cast");
   if (castRow) castRow.replaceChildren();
@@ -882,40 +971,9 @@ function initializeHomePage() {
     selectMovie(movie.id, false);
     document.querySelector("#seat-title").scrollIntoView({ behavior: "smooth", block: "center" });
   });
-  document.querySelector("#feature-trailer")?.addEventListener("click", async () => {
+  document.querySelector("#feature-trailer")?.addEventListener("click", () => {
     const movie = MOVIES[featuredMovieIndex];
-    const dialog = document.querySelector("#trailer-dialog");
-    const title = document.querySelector("#trailer-title");
-    const copy = document.querySelector("#trailer-copy");
-    const stage = document.querySelector("#trailer-stage");
-
-    title.textContent = movie.title;
-    stage.dataset.tone = movie.tone;
-    stage.replaceChildren();
-    stage.classList.remove("has-video");
-
-    let trailer = null;
-    if (movie.tmdbId) {
-      const data = await fetchTMDBMedia(movie.tmdbId);
-      trailer = data?.trailer;
-    }
-
-    if (trailer && trailer.embedUrl) {
-      stage.classList.add("has-video");
-      const iframe = document.createElement("iframe");
-      iframe.className = "trailer-iframe";
-      iframe.src = trailer.embedUrl;
-      iframe.title = `${movie.title} Trailer`;
-      iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-      iframe.allowFullscreen = true;
-      stage.appendChild(iframe);
-      copy.textContent = `${trailer.name || "Official trailer"} · Streamed via YouTube`;
-    } else {
-      stage.classList.remove("has-video");
-      copy.textContent = `${movie.description} (Trailer unavailable without TMDB connection).`;
-    }
-
-    dialog.showModal();
+    openTrailerDialog(movie);
   });
 
   function stopTrailer() {
@@ -1064,6 +1122,61 @@ function scoreMovie(movie, mood, occasion, budget) {
   return score;
 }
 
+function createGroupRequestId() {
+  const stamp = new Date().toISOString().replace(/[-:T.]/g, "").slice(0, 14);
+  return `GRP-${stamp}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+}
+
+function setGroupStatus(message, isError = false) {
+  const status = document.querySelector("#group-status");
+  if (!status) return;
+  status.textContent = message;
+  status.classList.toggle("error", isError);
+  status.classList.toggle("success", !isError && Boolean(message));
+}
+
+function renderGroupRequests() {
+  const list = document.querySelector("#group-request-list");
+  const emptyState = document.querySelector("#group-request-empty");
+  if (!list || !emptyState) return;
+  const requests = Array.isArray(state?.groupRequests)
+    ? [...state.groupRequests].sort((a, b) => new Date(b.at || 0) - new Date(a.at || 0))
+    : [];
+  list.replaceChildren();
+  if (!requests.length) {
+    list.hidden = true;
+    emptyState.hidden = false;
+    return;
+  }
+  list.hidden = false;
+  emptyState.hidden = true;
+  requests.forEach(request => {
+    const card = document.createElement("article");
+    card.className = "request-card";
+    const header = document.createElement("div");
+    header.className = "request-card-header";
+    const idLabel = document.createElement("span");
+    idLabel.className = "request-id";
+    idLabel.textContent = request.id || "GROUP";
+    const dateLabel = document.createElement("span");
+    dateLabel.className = "request-date";
+    dateLabel.textContent = request.at ? formatDate(request.at) : "Date unavailable";
+    header.append(idLabel, dateLabel);
+    const meta = document.createElement("div");
+    meta.className = "request-card-meta";
+    const film = document.createElement("strong");
+    film.textContent = MOVIES.find(item => item.id === request.movie)?.title || request.movie || "Unknown film";
+    const people = document.createElement("span");
+    people.textContent = `${Number(request.people) || 0} people`;
+    meta.append(film, people);
+    const note = document.createElement("p");
+    note.className = `request-note${request.note ? "" : " muted"}`;
+    note.textContent = request.note ? request.note : "No special note";
+    card.append(header, meta, note);
+    list.append(card);
+  });
+}
+
 function initializeLoungePage() {
   const results = document.querySelector("#suggest-results");
   document.querySelector("#suggest-form")?.addEventListener("submit", event => {
@@ -1092,17 +1205,34 @@ function initializeLoungePage() {
   });
   document.querySelector("#group-form")?.addEventListener("submit", event => {
     event.preventDefault();
+    const movieId = document.querySelector("#group-movie")?.value || "";
+    const people = Number(document.querySelector("#group-size")?.value || 0);
+    const note = (document.querySelector("#group-note")?.value || "").trim();
+    if (!movieId || !MOVIES.some(item => item.id === movieId)) {
+      setGroupStatus("Select a valid film for the group request.", true);
+      return;
+    }
+    if (!Number.isFinite(people) || people < 2 || people > 20) {
+      setGroupStatus("Group size must be between 2 and 20 people.", true);
+      return;
+    }
+    if (note.length > 180) {
+      setGroupStatus("The note must be 180 characters or less.", true);
+      return;
+    }
     const request = {
-      id: createBookingId(),
+      id: createGroupRequestId(),
       type: "group",
-      movie: document.querySelector("#group-movie").value,
-      people: document.querySelector("#group-size").value,
-      note: document.querySelector("#group-note").value,
+      movie: movieId,
+      people,
+      note,
       at: new Date().toISOString()
     };
     if (!saveState({ ...state, groupRequests: [request, ...state.groupRequests] })) return;
-    document.querySelector("#group-status").textContent = `Demo group request ${request.id} saved on this device. The cinema was not contacted.`;
+    setGroupStatus(`Group request ${request.id} saved on this device. No real reservation was made.`, false);
+    renderGroupRequests();
     event.target.reset();
+    document.querySelector("#group-size").value = "8";
   });
   document.querySelector("#private-form")?.addEventListener("submit", event => {
     event.preventDefault();
@@ -1139,6 +1269,7 @@ function initializeLoungePage() {
       select.append(option);
     });
   });
+  renderGroupRequests();
 }
 
 function initializeAccountPage() {

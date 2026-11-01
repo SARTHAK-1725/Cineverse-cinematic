@@ -905,7 +905,7 @@ h2 {
 }
 
 .movie-card > * {
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 #featured-poster,
@@ -1050,40 +1050,57 @@ h2 {
 }
 
 /* Hover Action Button */
-.movie-card-action {
-  position: absolute;
-  right: 18px;
-  bottom: 18px;
+.movie-card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0 20px 18px;
+}
+
+.movie-card-select,
+.movie-card-trailer,
+.watch-trailer-button {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
+  justify-content: center;
+  gap: 8px;
+  min-height: 38px;
+  border: 1px solid transparent;
   border-radius: var(--radius-pill);
-  background: var(--gradient-purple);
-  color: #FFFFFF;
+  color: var(--text-heading);
+  background: rgba(255, 255, 255, 0.04);
   font-size: 11px;
   font-weight: 700;
-  opacity: 0;
-  transform: translateY(6px);
+  letter-spacing: 0.02em;
+  transition: transform 180ms var(--ease), background 180ms var(--ease), border-color 180ms var(--ease), box-shadow 180ms var(--ease);
+}
+
+.movie-card-select {
+  flex: 1;
+  background: var(--gradient-purple);
   box-shadow: 0 4px 14px var(--purple-glow);
-  transition: opacity 200ms var(--ease), transform 200ms var(--ease);
 }
 
-.movie-card:hover .movie-card-action,
-.movie-card:focus-visible .movie-card-action,
-.movie-card[aria-pressed="true"] .movie-card-action {
-  opacity: 1;
-  transform: translateY(0);
+.movie-card-trailer,
+.watch-trailer-button {
+  border-color: rgba(139, 92, 246, 0.3);
+  background: rgba(139, 92, 246, 0.08);
 }
 
-.movie-card-action svg {
+.movie-card-select:hover,
+.movie-card-trailer:hover,
+.watch-trailer-button:hover {
+  transform: translateY(-1px);
+}
+
+.movie-card-select svg,
+.movie-card-trailer svg,
+.watch-trailer-button svg {
   width: 12px;
   height: 12px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  fill: currentColor;
+  flex-shrink: 0;
 }
 
 /* Selected Movie Preview Banner */
@@ -1146,6 +1163,17 @@ h2 {
   color: var(--text-heading);
   font-size: 14px;
   font-weight: 700;
+}
+
+.movie-details-actions {
+  display: flex;
+  justify-content: flex-start;
+  margin: 12px 0 16px;
+}
+
+.watch-trailer-button {
+  padding: 0 16px;
+  min-width: 160px;
 }
 
 /* ==========================================================================
@@ -1703,6 +1731,63 @@ h2 {
   stroke-linejoin: round;
 }
 
+.trailer-modal {
+  width: min(760px, calc(100vw - 32px));
+}
+
+.trailer-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 360px;
+  margin-top: 18px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  background: linear-gradient(135deg, rgba(17, 17, 27, 0.96), rgba(31, 20, 47, 0.96));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  animation: trailer-glow 2.4s var(--ease) infinite alternate;
+}
+
+.trailer-stage.has-video {
+  padding: 0;
+}
+
+.trailer-iframe {
+  width: 100%;
+  height: 100%;
+  min-height: 360px;
+  border: 0;
+  background: #000000;
+  aspect-ratio: 16 / 9;
+}
+
+.trailer-empty-state {
+  display: grid;
+  gap: 8px;
+  place-items: center;
+  padding: 32px 24px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.trailer-empty-state strong {
+  color: var(--text-heading);
+  font-size: clamp(20px, 3vw, 28px);
+  font-family: var(--font-display);
+}
+
+#trailer-copy {
+  margin: 14px 0 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+@keyframes trailer-glow {
+  from { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 0 0 rgba(139, 92, 246, 0.18); }
+  to { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 0 24px rgba(139, 92, 246, 0.22); }
+}
+
 /* Perforated Cinema Ticket Stub */
 .ticket-confirmation {
   position: relative;
@@ -2164,6 +2249,108 @@ h2 {
 .panel button:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(139, 92, 246, 0.55);
+}
+
+.status-message {
+  min-height: 20px;
+  margin-top: 12px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.5;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition: opacity 180ms var(--ease), transform 180ms var(--ease), border-color 180ms var(--ease), background 180ms var(--ease), color 180ms var(--ease);
+}
+
+.status-message:not(:empty) {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.status-message.success {
+  border-color: rgba(52, 211, 153, 0.45);
+  background: rgba(16, 185, 129, 0.1);
+  color: #C9F7E5;
+}
+
+.status-message.error {
+  border-color: rgba(251, 113, 133, 0.45);
+  background: rgba(244, 63, 94, 0.12);
+  color: #FEC2D2;
+}
+
+.request-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.empty-request-state {
+  margin-top: 14px;
+  padding: 18px 16px;
+  border: 1px dashed var(--border-medium);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text-muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+.request-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 18px 16px;
+  border: 1px solid rgba(139, 92, 246, 0.28);
+  border-radius: var(--radius-md);
+  background: rgba(139, 92, 246, 0.06);
+}
+
+.request-card-header,
+.request-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.request-id {
+  color: var(--purple-light);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.request-date {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.request-card-meta {
+  color: var(--text-heading);
+  font-size: 13px;
+}
+
+.request-card strong {
+  color: var(--text-heading);
+  font-weight: 700;
+}
+
+.request-note {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.request-note.muted {
+  color: var(--text-muted);
+  font-style: italic;
 }
 
 /* Suggestion Result Cards (AI Movie Finder) */
@@ -2852,6 +3039,11 @@ footer {
     grid-column: 1 / -1;
     justify-content: flex-start;
     padding-top: 6px;
+  }
+  .request-card-header,
+  .request-card-meta {
+    align-items: flex-start;
+    flex-direction: column;
   }
   .footer-top {
     flex-direction: column;
